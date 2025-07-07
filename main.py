@@ -34,8 +34,11 @@ async def predict(file: UploadFile = File(...)):
     labels = results[0].boxes.cls.cpu().numpy()
     boxes = results[0].boxes.xyxy.cpu().numpy()
 
-    # Broji slobodna mjesta
     n_free = int((labels == 0).sum())
+    
+    total_spots = len(labels)
+    
+    n_occupied = total_spots - n_free
 
     # Otvori sliku
     img = cv2.imread(temp_file)
@@ -56,8 +59,9 @@ async def predict(file: UploadFile = File(...)):
     os.remove(temp_file)
     os.remove(annotated_file)
 
-    
     return JSONResponse(content={
-        "n_free": n_free,
-        "image_base64": encoded_string
+        "n_free": n_free,                
+        "n_occupied": n_occupied,        
+        "total_spots": total_spots,      
+        "image_base64": encoded_string   
     })
