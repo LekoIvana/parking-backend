@@ -2,3 +2,4 @@ venv/
 __pycache__/
 models/*.pt
 *.env
+key/*.json
